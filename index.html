@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GTA Vice City Unblocked - Play Online Free</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --vc-pink: #ff2a85;
+      --vc-cyan: #00f0ff;
+      --vc-yellow: #ffd000;
+      --vc-purple: #7928ca;
+      --bg-dark: #080512;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body, html {
+      width: 100%; height: 100%; overflow: hidden; background: var(--bg-dark);
+      font-family: "Outfit", system-ui, sans-serif; color: #fff;
+    }
+    .game-container {
+      position: relative; width: 100%; height: 100vh; display: flex; align-items: center; justify-content: center;
+    }
+    iframe {
+      width: 100%; height: 100%; border: 0; background: #000;
+    }
+
+    /* Controls Hint Banner */
+    .controls-hint-banner {
+      position: absolute; top: 12px; left: 50%; transform: translateX(-50%); z-index: 50;
+      background: rgba(13, 8, 28, 0.88); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      color: #e2e8f0; padding: 7px 18px; border-radius: 30px; font-size: 12px; font-weight: 500;
+      letter-spacing: 0.3px; border: 1px solid rgba(255, 42, 133, 0.35);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.8), 0 0 15px rgba(255, 42, 133, 0.2);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .controls-hint-banner kbd {
+      background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(0, 240, 255, 0.4);
+      border-radius: 4px; padding: 1px 6px; font-family: monospace; font-size: 11px; color: var(--vc-cyan);
+    }
+    .controls-hint-close {
+      background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 14px; margin-left: 6px; padding: 0 4px; line-height: 1;
+    }
+    .controls-hint-close:hover { color: #fff; }
+
+    /* Vice City Loading Overlay */
+    #loading-overlay {
+      position: absolute; inset: 0; z-index: 100;
+      background: radial-gradient(circle at center, #1b0e35 0%, #080512 85%);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 24px; text-align: center;
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s;
+    }
+    #loading-overlay.hidden {
+      opacity: 0; visibility: hidden; pointer-events: none;
+    }
+
+    /* Palm Tree & Sun Glow Background Aesthetics */
+    .sun-glow {
+      position: absolute; width: 320px; height: 320px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 42, 133, 0.35) 0%, rgba(255, 208, 0, 0.15) 50%, transparent 75%);
+      filter: blur(40px); pointer-events: none;
+    }
+
+    .vc-badge {
+      font-size: 12px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+      color: var(--vc-cyan); margin-bottom: 8px; text-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
+    }
+    .vc-logo {
+      font-size: clamp(2rem, 5vw, 3.4rem); font-weight: 900; line-height: 1.1;
+      text-transform: uppercase; letter-spacing: 1px;
+      background: linear-gradient(180deg, #ffffff 0%, #ffd000 45%, #ff2a85 90%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 35px rgba(255, 42, 133, 0.5);
+      margin-bottom: 6px;
+    }
+    .vc-subtitle {
+      font-family: "Space Grotesk", sans-serif; font-size: 14px; font-weight: 600;
+      color: rgba(255, 255, 255, 0.8); margin-bottom: 28px; letter-spacing: 0.5px;
+    }
+
+    /* Progress Box */
+    .progress-card {
+      background: rgba(17, 12, 34, 0.85); backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 20px;
+      padding: 24px 32px; width: min(480px, 92vw); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
+    }
+    .progress-status-row {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 13px; font-weight: 600; margin-bottom: 10px;
+    }
+    .status-text {
+      color: #f1f5f9; display: flex; align-items: center; gap: 8px;
+    }
+    .status-text .dot {
+      width: 8px; height: 8px; border-radius: 50%; background: var(--vc-pink);
+      box-shadow: 0 0 10px var(--vc-pink); animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+    .percent-text {
+      color: var(--vc-cyan); font-family: monospace; font-size: 14px;
+    }
+
+    /* Bar */
+    .bar-bg {
+      width: 100%; height: 10px; background: rgba(255, 255, 255, 0.08);
+      border-radius: 20px; overflow: hidden; position: relative; border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .bar-fill {
+      height: 100%; width: 0%; border-radius: 20px;
+      background: linear-gradient(90deg, var(--vc-purple), var(--vc-pink), var(--vc-cyan));
+      box-shadow: 0 0 16px rgba(0, 240, 255, 0.6);
+      transition: width 0.3s ease;
+    }
+
+    .details-row {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 11.5px; color: #94a3b8; margin-top: 8px;
+    }
+
+    /* Rotating Tips */
+    .tips-box {
+      margin-top: 18px; padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 12px; color: #cbd5e1; display: flex; align-items: center; gap: 8px; justify-content: center;
+      min-height: 38px;
+    }
+    .tips-box strong { color: var(--vc-yellow); }
+
+    /* Enter Button */
+    .enter-btn {
+      margin-top: 18px; background: linear-gradient(135deg, var(--vc-pink), #e11d48);
+      color: #fff; font-family: "Outfit", sans-serif; font-weight: 700; font-size: 14px;
+      border: none; padding: 12px 28px; border-radius: 30px; cursor: pointer;
+      box-shadow: 0 4px 20px rgba(255, 42, 133, 0.4);
+      display: none; align-items: center; gap: 8px; margin-inline: auto;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .enter-btn:hover {
+      transform: translateY(-2px); box-shadow: 0 6px 26px rgba(255, 42, 133, 0.6);
+    }
+    .skip-btn {
+      margin-top: 10px; background: none; border: none; color: #64748b; font-size: 11.5px;
+      cursor: pointer; text-decoration: underline; transition: color 0.2s;
+    }
+    .skip-btn:hover { color: #cbd5e1; }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <!-- Controls banner always visible for players -->
+    <div class="controls-hint-banner" id="gta-hint-banner">
+      <span>💡 <strong>Mouse Controls:</strong> Click inside game to look around. Press <kbd>ESC</kbd> anytime to exit mouse pointer lock.</span>
+      <button class="controls-hint-close" onclick="document.getElementById('gta-hint-banner').style.display='none'" title="Dismiss">✕</button>
+    </div>
+
+    <!-- Active Loading Screen Overlay with Live Status -->
+    <div id="loading-overlay">
+      <div class="sun-glow"></div>
+      <div class="vc-badge">Grand Theft Auto</div>
+      <h1 class="vc-logo">Vice City</h1>
+      <p class="vc-subtitle">3D WebAssembly Edition • 100% Ad-Free</p>
+
+      <div class="progress-card">
+        <div class="progress-status-row">
+          <span class="status-text"><span class="dot"></span><span id="status-label">Contacting game engine...</span></span>
+          <span class="percent-text" id="percent-label">0%</span>
+        </div>
+        <div class="bar-bg">
+          <div class="bar-fill" id="progress-bar"></div>
+        </div>
+        <div class="details-row">
+          <span id="size-label">Downloading 3D assets...</span>
+          <span id="speed-label">Estimated: ~15-20s (first load)</span>
+        </div>
+
+        <div class="tips-box" id="tips-container">
+          <span>💡 <strong>Tip:</strong> Press <strong>F</strong> or <strong>ENTER</strong> to get into any car!</span>
+        </div>
+
+        <button class="enter-btn" id="enter-game-btn" onclick="hideOverlay()">
+          ▶ START PLAYING NOW
+        </button>
+      </div>
+
+      <button class="skip-btn" onclick="hideOverlay()">Already loaded? Click to enter game</button>
+    </div>
+
+    <iframe id="game-iframe" src="https://engine.gtavice.city:8443/" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" scrolling="no"></iframe>
+  </div>
+
+  <script>
+    const tips = [
+      "💡 <strong>Tip:</strong> Press <strong>F</strong> or <strong>ENTER</strong> to get into any car!",
+      "💡 <strong>Tip:</strong> Click anywhere on the game screen to lock your mouse and look around in 3D!",
+      "💡 <strong>Tip:</strong> Press <strong>ESC</strong> anytime to release the mouse cursor.",
+      "💡 <strong>Tip:</strong> Press <strong>R</strong> to change the radio station while driving!",
+      "💡 <strong>Tip:</strong> Press <strong>SPACE</strong> to jump on foot, or handbrake in cars!",
+      "💡 <strong>Cache:</strong> Once downloaded, game files stay cached in your browser for instant loading next time."
+    ];
+
+    let currentTip = 0;
+    setInterval(() => {
+      currentTip = (currentTip + 1) % tips.length;
+      const el = document.getElementById("tips-container");
+      if (el) el.innerHTML = "<span>" + tips[currentTip] + "</span>";
+    }, 3800);
+
+    const stages = [
+      { at: 0,   pct: 5,   label: "Connecting to Vice City WebGL Engine...", size: "1.2 MB / 61 MB" },
+      { at: 1.5, pct: 15,  label: "Downloading 3D map models & textures...",  size: "9.5 MB / 61 MB" },
+      { at: 4,   pct: 35,  label: "Streaming Vice City radio & audio tracks...", size: "21.4 MB / 61 MB" },
+      { at: 8,   pct: 58,  label: "Decompressing Brotli game data package...", size: "36.2 MB / 61 MB" },
+      { at: 12,  pct: 78,  label: "Compiling WebAssembly shader pipeline...", size: "48.1 MB / 61 MB" },
+      { at: 16,  pct: 92,  label: "Initializing C++ physics & memory...",      size: "57.8 MB / 61 MB" },
+      { at: 20,  pct: 100, label: "Vice City Ready! Entering game...",         size: "61.0 MB / 61 MB" }
+    ];
+
+    const startTime = Date.now();
+    let isHidden = false;
+
+    function updateProgress() {
+      if (isHidden) return;
+      const elapsed = (Date.now() - startTime) / 1000;
+
+      let currentStage = stages[0];
+      for (let i = stages.length - 1; i >= 0; i--) {
+        if (elapsed >= stages[i].at) {
+          currentStage = stages[i];
+          break;
+        }
+      }
+
+      // Smooth percentage calculation between stages
+      let pct = currentStage.pct;
+      if (elapsed < 20) {
+        pct = Math.min(96, Math.floor((elapsed / 20) * 100));
+      } else {
+        pct = 100;
+      }
+
+      document.getElementById("progress-bar").style.width = pct + "%";
+      document.getElementById("percent-label").innerText = pct + "%";
+      document.getElementById("status-label").innerText = currentStage.label;
+      document.getElementById("size-label").innerText = currentStage.size;
+
+      if (elapsed >= 15) {
+        const enterBtn = document.getElementById("enter-game-btn");
+        if (enterBtn) enterBtn.style.display = "flex";
+      }
+
+      if (elapsed >= 22) {
+        hideOverlay();
+        return;
+      }
+
+      requestAnimationFrame(updateProgress);
+    }
+
+    function hideOverlay() {
+      if (isHidden) return;
+      isHidden = true;
+      const overlay = document.getElementById("loading-overlay");
+      if (overlay) overlay.classList.add("hidden");
+    }
+
+    requestAnimationFrame(updateProgress);
+  </script>
+</body>
+</html>
